@@ -7,7 +7,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Step 3: Use the Consumer widget to access data
     return Consumer<CounterProvider>(
       builder: (context, counterProvider, child) {
         return Scaffold(
@@ -38,6 +37,30 @@ class HomePage extends StatelessWidget {
               counterProvider.increment();
             },
             child: const Icon(Icons.add),
+          ),
+          bottomNavigationBar: BottomAppBar(
+            child: Container(
+              height: 50,
+              color: Colors.transparent,
+              // i need this bottom bar more bauty
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.home),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/example');
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.arrow_forward),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/example');
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         );
       },

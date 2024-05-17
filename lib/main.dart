@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_provider/pages/example.dart';
 import 'package:flutter_provider/pages/home.dart';
 import 'package:flutter_provider/providers/counter_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    // Step 2: Wrap your app with MultiProvider
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -27,6 +27,9 @@ class MyApp extends StatelessWidget {
       title: 'Provider Example',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const HomePage(),
+      routes: {
+        '/example': (context) => const Example(),
+      },
     );
   }
 }
