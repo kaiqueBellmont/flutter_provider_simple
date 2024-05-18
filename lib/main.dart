@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_provider/pages/example.dart';
 import 'package:flutter_provider/pages/home.dart';
 import 'package:flutter_provider/providers/counter_provider.dart';
+import 'package:flutter_provider/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => CounterProvider(),
-        ),
+        ChangeNotifierProvider<CounterProvider>(create: (_) => CounterProvider()),
+        ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),

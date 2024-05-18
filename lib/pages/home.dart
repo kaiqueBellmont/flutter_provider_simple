@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_provider/providers/counter_provider.dart';
+import 'package:flutter_provider/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -7,11 +8,16 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CounterProvider>(
-      builder: (context, counterProvider, child) {
+    return Consumer2<CounterProvider, UserProvider>(
+      builder: (context, counterProvider, userProvider, child) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Counter App'),
+            title: Text("Home"),
+            centerTitle: true,
+            leading: IconButton(
+              icon: const Icon(Icons.supervised_user_circle),
+              onPressed: () {},
+            ),
           ),
           body: Center(
             child: Column(
@@ -33,7 +39,6 @@ class HomePage extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              // Step 4: Trigger state update
               counterProvider.increment();
             },
             child: const Icon(Icons.add),
@@ -42,7 +47,6 @@ class HomePage extends StatelessWidget {
             child: Container(
               height: 50,
               color: Colors.transparent,
-              // i need this bottom bar more bauty
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -55,7 +59,8 @@ class HomePage extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.arrow_forward),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/example');
+                      Navigator.pushNamed(
+                          context, '/userSelection'); // Navegar para a tela de seleção de usuários
                     },
                   ),
                 ],
