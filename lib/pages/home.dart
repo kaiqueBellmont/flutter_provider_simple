@@ -6,6 +6,38 @@ import 'package:provider/provider.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  void _showUserSelection(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Consumer<UserProvider>(
+          builder: (context, userProvider, child) {
+            return AlertDialog(
+              title: const Text('Select User'),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: userProvider.users.length,
+                  itemBuilder: (context, index) {
+                    final user = userProvider.users[index];
+                    return ListTile(
+                      title: Text(user.username),
+                      onTap: () {
+                        userProvider.selectUser(user);
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<CounterProvider, UserProvider>(
@@ -13,20 +45,36 @@ class HomePage extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Home"),
+            centerTitle: true,
+            leading: IconButton(
+              icon: const Icon(Icons.person),
+              onPressed: () {
+                _showUserSelection(context); // Mostrar diálogo de seleção ao clicar
+              },
+            ),
             actions: [
               Container(
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  userProvider.selectedUser?.username ?? 'No user selected',
-                  style: const TextStyle(fontSize: 14),
+                padding: const EdgeInsets.only(right: 20),
+                child: Row(
+                  children: [
+                    userProvider.selectedUser?.username != null
+                        ? CircleAvatar(
+                            backgroundColor: Colors.grey.shade800,
+                            child: Text(
+                              userProvider.selectedUser!.username[0],
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          )
+                        : const SizedBox(width: 10),
+                    const SizedBox(width: 10),
+                    Text(
+                      userProvider.selectedUser?.username ?? 'No user selected',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
                 ),
               ),
             ],
-            centerTitle: true,
-            leading: IconButton(
-              icon: const Icon(Icons.supervised_user_circle),
-              onPressed: () {},
-            ),
           ),
           body: Center(
             child: Column(
@@ -46,38 +94,101 @@ class HomePage extends StatelessWidget {
               ],
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              counterProvider.increment();
-            },
-            child: const Icon(Icons.add),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: SizedBox(
+            width: 100,
+            height: 60,
+            child: FloatingActionButton(
+              onPressed: () {
+                counterProvider.increment();
+              },
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              child: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: const LinearGradient(
+                    colors: [Colors.blue, Colors.purple],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+            ),
           ),
-          bottomNavigationBar: BottomAppBar(
-            child: Container(
-              height: 50,
-              color: Colors.transparent,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.home),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/example');
-                    },
+          bottomNavigationBar: ClipPath(
+            clipper: BottomAppBarClipper(),
+            child: BottomAppBar(
+              shape: const CircularNotchedRectangle(),
+              notchMargin: 6.0,
+              child: Container(
+                height: 60,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Colors.blue, Colors.purple],
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.arrow_forward),
-                    onPressed: () {
-                      Navigator.pushNamed(
-                          context, '/userSelection'); // Navegar para a tela de seleção de usuários
-                    },
-                  ),
-                ],
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.home),
+                      color: Colors.white,
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/');
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.arrow_forward),
+                      color: Colors.white,
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/example');
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         );
       },
     );
+  }
+}
+
+class BottomAppBarClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final Path path = Path();
+    path.moveTo(0, 0);
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return false;
   }
 }
