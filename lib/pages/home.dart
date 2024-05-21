@@ -12,7 +12,16 @@ class HomePage extends StatelessWidget {
       builder: (context, counterProvider, userProvider, child) {
         return Scaffold(
           appBar: AppBar(
-            title: Text("Home"),
+            title: const Text("Home"),
+            actions: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  userProvider.selectedUser?.username ?? 'No user selected',
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            ],
             centerTitle: true,
             leading: IconButton(
               icon: const Icon(Icons.supervised_user_circle),
